@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Memoi & Griffins</title>
+  <title>Memoi &amp; Griffins</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -89,9 +89,9 @@
     </header>
 
     <section class="card">
-      <h2>DAYS SINCE WE MET</h2>
+      <h2>TIME SINCE WE MET</h2>
       <div class="number" id="daysTogether">—</div>
-      <div class="detail">Since Monday, November 2, 2026</div>
+      <div class="detail" id="timeTogether">Since Monday, November 2, 2026</div>
     </section>
 
     <div class="row">
@@ -132,11 +132,11 @@
       </p>
     </section>
 
-    <footer>Memoi & Griffins • Made with love ❤️</footer>
+    <footer>Memoi &amp; Griffins • Made with love ❤️</footer>
   </main>
 
   <script>
-    // Date you met: Monday, November 2, 2026.
+    // Date you met: Monday, November 2, 2026. The elapsed-time counter starts at local midnight.
     const metDate = new Date(2026, 10, 2);
 
     // Starting estimate from your message:
@@ -276,16 +276,24 @@
     });
 
     function render() {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const elapsedMs = Math.max(0, Date.now() - metDate.getTime());
+      const totalSeconds = Math.floor(elapsedMs / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
 
-      $("daysTogether").textContent = Math.max(0, daysBetween(metDate, today));
+      $("daysTogether").textContent = `${days} ${days === 1 ? "day" : "days"}`;
+      $("timeTogether").textContent =
+        `${String(hours).padStart(2, "0")} hours · ` +
+        `${String(minutes).padStart(2, "0")} mins · ` +
+        `${String(seconds).padStart(2, "0")} secs`;
       updateBirthdayCountdowns();
       renderCycle();
     }
 
     render();
-    setInterval(render, 60 * 60 * 1000);
+    setInterval(render, 1000);
   </script>
 </body>
 </html>
